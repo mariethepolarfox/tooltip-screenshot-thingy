@@ -16,12 +16,15 @@ import it.unimi.dsi.fastutil.objects.Object2ObjectSortedMaps
 import me.siv.toolshot.clipboard.ClipboardUtil
 import me.siv.toolshot.clipboard.MacOsCompat
 import me.siv.toolshot.config.Config
+import net.minecraft.client.Camera
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.gui.render.GuiRenderer
 import net.minecraft.client.gui.render.state.GuiRenderState
 import net.minecraft.client.gui.screens.inventory.tooltip.TooltipRenderUtil
 import net.minecraft.client.renderer.*
 import net.minecraft.client.renderer.fog.FogRenderer
+import net.minecraft.client.renderer.rendertype.RenderSetup
+import net.minecraft.client.renderer.rendertype.RenderType
 import net.minecraft.network.chat.Component
 import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
@@ -38,13 +41,9 @@ object TooltipUtil {
     val TOOLTIP_LAYER: Function<RenderTarget, RenderType> = Function { rt ->
         RenderType.create(
             "tooltip_screenshot",
-            786432,
-            false,
-            false,
-            RenderPipelines.TEXT,
-            RenderType.CompositeState.builder().setTextureState(RenderStateShard.NO_TEXTURE)
-                .setOutputState(RenderStateShard.OutputStateShard("tooltip_screenshot") { rt })
-                .setLightmapState(RenderStateShard.LIGHTMAP).createCompositeState(false)
+            RenderSetup.builder(
+                RenderPipelines.TEXT
+            ).createRenderSetup()
         )
     }
 
@@ -83,23 +82,25 @@ object TooltipUtil {
             minecraft.level?.gameTime ?: 0L,
             minecraft.deltaTracker,
             minecraft.options.menuBackgroundBlurriness,
+            Camera(),
+            true,
         )
         val consumer = OverrideVertexProvider(ByteBufferBuilder(256), renderTarget)
 
         val renderState = GuiRenderState()
-        val context = GuiGraphics(minecraft, renderState)
+        val context = GuiGraphics(minecraft,renderState, 0, 0)
 
         val renderer = GuiRenderer(
             renderState,
             consumer,
-            //? if > 1.21.8 {
             SubmitNodeStorage(),
             minecraft.gameRenderer.featureRenderDispatcher,
-            //?}
             emptyList()
         )
 
-        encoder.clearColorTexture(renderTarget.colorTexture, 0)
+        val texture = renderTarget.colorTexture ?: return
+
+        encoder.clearColorTexture(texture, 0)
         context.pose().scale(
             minecraft.window.guiScaledWidth / (fullWidth + 24).toFloat(),
             minecraft.window.guiScaledHeight / (height + 24).toFloat(),
@@ -119,7 +120,7 @@ object TooltipUtil {
             component.renderImage(font, 0 + 12, yOffset + 12, fullWidth, height, context)
             yOffset += component.getHeight(font) + (if (component == list.first()) 2 else 0)
         }
-        context./*? if > 1.21.8 {*/renderDeferredElements()/*? } else {*//*renderDeferredTooltip()*//*?}*/
+        context.renderDeferredElements()
         (renderer as GuiRendererInterface).`toolShot$render`(minecraft.gameRenderer.fogRenderer.getBuffer(FogRenderer.FogMode.NONE), renderTarget)
 
         consumer.finishDrawing()
@@ -133,11 +134,11 @@ object TooltipUtil {
         val width = renderTarget.width
         val height = renderTarget.height
 
-        val gpuTexture = renderTarget.colorTexture
+        val gpuTexture = renderTarget.colorTexture ?: return
         val gpuBuffer = RenderSystem.getDevice().createBuffer(
             null,
             GpuBuffer.USAGE_COPY_DST or GpuBuffer.USAGE_MAP_READ,
-            renderTarget.width * renderTarget.height * (renderTarget.colorTexture?.format?.pixelSize() ?: 4)
+            (renderTarget.width * renderTarget.height * (renderTarget.colorTexture?.format?.pixelSize() ?: 4)).toLong()
         )
         val encoder = RenderSystem.getDevice().createCommandEncoder()
         RenderSystem.getDevice().createCommandEncoder().copyTextureToBuffer(gpuTexture, gpuBuffer, 0, {

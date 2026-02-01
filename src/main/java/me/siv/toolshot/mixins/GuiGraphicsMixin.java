@@ -6,7 +6,11 @@ import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipPositioner;
-import net.minecraft.resources.ResourceLocation;
+//? if < 1.21.11 {
+// import net.minecraft.resources.ResourceLocation;
+//? } else {
+import net.minecraft.resources.Identifier;
+//? }
 import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -28,14 +32,18 @@ public class GuiGraphicsMixin {
             int i,
             int j,
             ClientTooltipPositioner clientTooltipPositioner,
-            ResourceLocation resourceLocation,
+            //? if < 1.21.11 {
+            // ResourceLocation id,
+            //? } else {
+            Identifier id,
+            //? }
             boolean bl,
             CallbackInfo ci
     ) {
         var lastState = TooltipUtil.INSTANCE.getLastState();
 
-        if (lastState == null || !lastState.equals(list, resourceLocation, font)) {
-            TooltipUtil.INSTANCE.setLastState(new TooltipRenderState(list, resourceLocation, font));
+        if (lastState == null || !lastState.equals(list, id, font)) {
+            TooltipUtil.INSTANCE.setLastState(new TooltipRenderState(list, id, font));
         }
     }
 }

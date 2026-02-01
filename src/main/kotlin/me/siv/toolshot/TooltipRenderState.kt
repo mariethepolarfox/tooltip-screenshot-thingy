@@ -2,14 +2,23 @@ package me.siv.toolshot
 
 import net.minecraft.client.gui.Font
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent
-import net.minecraft.resources.ResourceLocation
+//? if < 1.21.11 {
+/*import net.minecraft.resources.ResourceLocation*/
+//? } else {
+import net.minecraft.resources.Identifier
+//? }
+
 
 data class TooltipRenderState(
     var lines: List<ClientTooltipComponent>,
-    var background: ResourceLocation?,
+    var background: /*? if < 1.21.11 {*//*ResourceLocation?*//*? } else {*/Identifier?/*? }*/,
     var font: Font,
 ) {
-    fun equals(lines: List<ClientTooltipComponent>, background: ResourceLocation?, font: Font): Boolean {
+    fun equals(
+        lines: List<ClientTooltipComponent>,
+        background: /*? if < 1.21.11 {*//*ResourceLocation?*//*? } else {*/Identifier?/*? }*/,
+        font: Font
+    ): Boolean {
         return this.lines == lines && this.background == background && this.font == font
     }
 }

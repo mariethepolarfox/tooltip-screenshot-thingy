@@ -74,7 +74,15 @@ public class GuiRendererMixin implements GuiRendererInterface {
             RenderSystem.AutoStorageIndexBuffer rendersystem$autostorageindexbuffer = RenderSystem.getSequentialBuffer(VertexFormat.Mode.QUADS);
             GpuBuffer gpubuffer = rendersystem$autostorageindexbuffer.getBuffer(i);
             VertexFormat.IndexType vertexformat$indextype = rendersystem$autostorageindexbuffer.type();
-            GpuBufferSlice gpubufferslice = RenderSystem.getDynamicUniforms().writeTransform((new Matrix4f()).setTranslation(0.0F, 0.0F, -11000.0F), new Vector4f(1.0F, 1.0F, 1.0F, 1.0F), new Vector3f(), new Matrix4f(), 0.0F);
+            GpuBufferSlice gpubufferslice = RenderSystem.getDynamicUniforms().writeTransform(
+                    (new Matrix4f()).setTranslation(0.0F, 0.0F, -11000.0F),
+                    new Vector4f(1.0F, 1.0F, 1.0F, 1.0F),
+                    new Vector3f(),
+                    new Matrix4f()
+                    //? if < 1.21.11 {
+                    //,0.0F
+                    //? }
+            );
             if (this.firstDrawIndexAfterBlur > 0) {
                 this.executeDrawRange(() -> "GUI before blur", renderTarget, gpuBufferSlice, gpubufferslice, gpubuffer, vertexformat$indextype, 0, Math.min(this.firstDrawIndexAfterBlur, this.draws.size()));
             }

@@ -9,7 +9,11 @@ import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents
 import net.fabricmc.fabric.api.client.screen.v1.ScreenKeyboardEvents
 import net.minecraft.client.KeyMapping
 import net.minecraft.client.Minecraft
-import net.minecraft.resources.ResourceLocation
+//? if < 1.21.11 {
+/*import net.minecraft.resources.ResourceLocation*/
+//? } else {
+import net.minecraft.resources.Identifier
+//? }
 import org.lwjgl.glfw.GLFW
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -22,7 +26,7 @@ object Toolshot : ClientModInitializer, Logger by LoggerFactory.getLogger(MODID)
     val configurator = Configurator("toolshot")
     var config: ResourcefulConfig? = null
 
-    private val categoryResource = ResourceLocation.fromNamespaceAndPath(MODID, "main")
+    private val categoryResource = /*? if > 1.21.10 {*/Identifier/*? } else {*//*ResourceLocation*//*? }*/.fromNamespaceAndPath(MODID, "main")
     //? if > 1.21.8 {
     val CATEGORY: KeyMapping.Category = KeyMapping.Category.register(categoryResource)
     //? }

@@ -3,10 +3,11 @@
 # Minecraft
 fabricLoader = "0.18.4"
 fabricKt = "1.13.7+kotlin.2.2.21"
-loom = "1.12-SNAPSHOT"
+loom = "1.15-SNAPSHOT"
 
 # Dependencies
 objc = "1.2"
+resourcefulConfigKt = "3.5.15"
 
 # Dev Dependencies
 devauth = "1.2.1"
@@ -19,6 +20,7 @@ fabricKt = { module = "net.fabricmc:fabric-language-kotlin", version.ref = "fabr
 devauth = { module = "me.djtheredstoner:DevAuth-fabric", version.ref = "devauth" }
 
 objc = { module = "ca.weblite:java-objc-bridge", version.ref = "objc" }
+resourcefulconfigkt = { module = "com.teamresourceful.resourcefulconfigkt:resourcefulconfigkt-fabric-1.21.5", version.ref = "resourcefulConfigKt" }
 
 [plugins]
 loom = { id = "fabric-loom", version.ref = "loom" }
