@@ -10,7 +10,7 @@ objc = "1.2"
 resourcefulConfigKt = "4.0.0-beta.1"
 
 # Dev Dependencies
-devauth = "1.2.1"
+devauth = "1.2.2"
 
 [libraries]
 

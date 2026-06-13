@@ -3,14 +3,10 @@ package me.marie.toolshot.mixins;
 import me.marie.toolshot.TooltipRenderState;
 import me.marie.toolshot.TooltipUtil;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipPositioner;
-//? if < 1.21.11 {
-// import net.minecraft.resources.ResourceLocation;
-//? } else {
 import net.minecraft.resources.Identifier;
-//? }
 import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -19,12 +15,12 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.List;
 
-@Mixin(GuiGraphics.class)
-public class GuiGraphicsMixin {
+@Mixin(GuiGraphicsExtractor.class)
+public class GuiGraphicsExtractorMixin {
 
     @Inject(
             method = "setTooltipForNextFrameInternal",
-            at = @At(value = "FIELD", target = "Lnet/minecraft/client/gui/GuiGraphics;deferredTooltip:Ljava/lang/Runnable;", opcode = Opcodes.PUTFIELD)
+            at = @At(value = "FIELD", target = "Lnet/minecraft/client/gui/GuiGraphicsExtractor;deferredTooltip:Ljava/lang/Runnable;", opcode = Opcodes.PUTFIELD)
     )
     private void onRenderTooltip(
             Font font,
@@ -32,11 +28,7 @@ public class GuiGraphicsMixin {
             int i,
             int j,
             ClientTooltipPositioner clientTooltipPositioner,
-            //? if < 1.21.11 {
-            // ResourceLocation id,
-            //? } else {
             Identifier id,
-            //? }
             boolean bl,
             CallbackInfo ci
     ) {

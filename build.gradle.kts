@@ -1,9 +1,7 @@
-import org.jetbrains.kotlin.gradle.dsl.JvmTarget
-
 plugins {
     java
     idea
-    kotlin("jvm") version "2.2.21"
+    kotlin("jvm") version "2.4.0"
     alias(libs.plugins.loom)
     `versioned-catalogues`
 }
@@ -13,6 +11,13 @@ repositories {
     maven("https://pkgs.dev.azure.com/djtheredstoner/DevAuth/_packaging/public/maven/v1")
     maven("https://maven.terraformersmc.com/releases/")
 }
+
+java {
+    withSourcesJar()
+}
+
+kotlin { jvmToolchain(25) }
+
 
 dependencies {
     minecraft(versionedCatalog["minecraft"])
@@ -62,12 +67,6 @@ tasks {
         from("LICENSE")
     }
 
-    compileKotlin {
-        compilerOptions {
-            jvmTarget = JvmTarget.JVM_24
-        }
-    }
-
     build {
         doLast {
             val sourceFile = rootProject.projectDir.resolve("versions/${project.name}/build/libs/${stonecutter.current.version}-$version.jar")
@@ -77,10 +76,6 @@ tasks {
         }
     }
 
-}
-
-java {
-    withSourcesJar()
 }
 
 idea {

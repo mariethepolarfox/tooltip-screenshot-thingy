@@ -1,16 +1,20 @@
 package me.marie.toolshot.mixins;
 
+
+import me.marie.toolshot.GuiRendererInterface;
+import net.minecraft.client.renderer.Projection;
+import net.minecraft.client.renderer.state.WindowRenderState;
+import net.minecraft.client.renderer.state.gui.GuiRenderState;
+import net.minecraft.client.renderer.state.gui.pip.PictureInPictureRenderState;
+import net.minecraft.client.renderer.ProjectionMatrixBuffer;
 import com.mojang.blaze3d.ProjectionType;
 import com.mojang.blaze3d.buffers.GpuBuffer;
 import com.mojang.blaze3d.buffers.GpuBufferSlice;
 import com.mojang.blaze3d.pipeline.RenderTarget;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.VertexFormat;
-import me.marie.toolshot.GuiRendererInterface;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.render.GuiRenderer;
-import net.minecraft.client.gui.render.state.GuiRenderState;
-import net.minecraft.client.renderer.CachedOrthoProjectionMatrixBuffer;
 import net.minecraft.client.renderer.MappableRingBuffer;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
@@ -24,9 +28,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Supplier;
 
-/**
- * Adapted from https://github.com/DeDiamondPro/ChatShot/blob/master/src/main/java/dev/dediamondpro/chatshot/mixins/GuiRendererMixin.java
- */
 @Mixin(GuiRenderer.class)
 public class GuiRendererMixin implements GuiRendererInterface {
     @Final
@@ -36,9 +37,6 @@ public class GuiRendererMixin implements GuiRendererInterface {
     private int firstDrawIndexAfterBlur;
     @Final
     @Shadow
-    private CachedOrthoProjectionMatrixBuffer guiProjectionMatrixBuffer;
-    @Final
-    @Shadow
     private List<GuiRenderer.MeshToDraw> meshesToDraw;
     @Final
     @Shadow
@@ -46,6 +44,13 @@ public class GuiRendererMixin implements GuiRendererInterface {
     @Final
     @Shadow
     private Map<VertexFormat, MappableRingBuffer> vertexBuffers;
+
+    @Final
+    @Shadow
+    private Projection guiProjection;
+    @Final
+    @Shadow
+    private ProjectionMatrixBuffer guiProjectionMatrixBuffer;
 
     @Shadow
     private void prepare() {
@@ -62,7 +67,9 @@ public class GuiRendererMixin implements GuiRendererInterface {
     @Unique
     void toolShot$draw(GpuBufferSlice gpuBufferSlice, RenderTarget renderTarget) {
         if (!this.draws.isEmpty()) {
-            RenderSystem.setProjectionMatrix(this.guiProjectionMatrixBuffer.getBuffer((float) Minecraft.getInstance().getWindow().getGuiScaledWidth(), (float) Minecraft.getInstance().getWindow().getGuiScaledHeight()), ProjectionType.ORTHOGRAPHIC);
+            WindowRenderState windowState = Minecraft.getInstance().gameRenderer.getGameRenderState().windowRenderState;
+            this.guiProjection.setupOrtho(1000.0F, 11000.0F, (float)windowState.width / (float)windowState.guiScale, (float)windowState.height / (float)windowState.guiScale, true);
+            RenderSystem.setProjectionMatrix(this.guiProjectionMatrixBuffer.getBuffer(this.guiProjection), ProjectionType.ORTHOGRAPHIC);
             int i = 0;
 
             for (GuiRenderer.Draw guirenderer$draw : this.draws) {
@@ -79,9 +86,6 @@ public class GuiRendererMixin implements GuiRendererInterface {
                     new Vector4f(1.0F, 1.0F, 1.0F, 1.0F),
                     new Vector3f(),
                     new Matrix4f()
-                    //? if < 1.21.11 {
-                    //,0.0F
-                    //? }
             );
             if (this.firstDrawIndexAfterBlur > 0) {
                 this.executeDrawRange(() -> "GUI before blur", renderTarget, gpuBufferSlice, gpubufferslice, gpubuffer, vertexformat$indextype, 0, Math.min(this.firstDrawIndexAfterBlur, this.draws.size()));
