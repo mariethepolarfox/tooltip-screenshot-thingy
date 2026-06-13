@@ -16,19 +16,18 @@ repositories {
 
 dependencies {
     minecraft(versionedCatalog["minecraft"])
-    mappings(loom.officialMojangMappings())
 
-    modImplementation(libs.fabricLoader)
-    modImplementation(versionedCatalog["fabricApi"])
-    modImplementation(libs.fabricKt)
+    implementation(libs.fabricLoader)
+    implementation(versionedCatalog["fabricApi"])
+    implementation(libs.fabricKt)
 
-    modImplementation(libs.devauth)
+    implementation(libs.devauth)
 
-    modImplementation(versionedCatalog["resourcefulconfig"])
-    modImplementation(libs.resourcefulconfigkt)
+    implementation(versionedCatalog["resourcefulconfig"])
+    implementation(libs.resourcefulconfigkt)
     include(libs.resourcefulconfigkt)
 
-    modImplementation(versionedCatalog["modmenu"])
+    implementation(versionedCatalog["modmenu"])
 
     compileOnly(libs.objc)
 }
@@ -65,7 +64,7 @@ tasks {
 
     compileKotlin {
         compilerOptions {
-            jvmTarget = JvmTarget.JVM_21
+            jvmTarget = JvmTarget.JVM_24
         }
     }
 

@@ -4,16 +4,12 @@ import com.teamresourceful.resourcefulconfig.api.loader.Configurator
 import com.teamresourceful.resourcefulconfig.api.types.ResourcefulConfig
 import me.siv.toolshot.config.Config
 import net.fabricmc.api.ClientModInitializer
-import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper
+import net.fabricmc.fabric.api.client.keymapping.v1.KeyMappingHelper
 import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents
 import net.fabricmc.fabric.api.client.screen.v1.ScreenKeyboardEvents
 import net.minecraft.client.KeyMapping
 import net.minecraft.client.Minecraft
-//? if < 1.21.11 {
-/*import net.minecraft.resources.ResourceLocation*/
-//? } else {
 import net.minecraft.resources.Identifier
-//? }
 import org.lwjgl.glfw.GLFW
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -26,30 +22,29 @@ object Toolshot : ClientModInitializer, Logger by LoggerFactory.getLogger(MODID)
     val configurator = Configurator("toolshot")
     var config: ResourcefulConfig? = null
 
-    private val categoryResource = /*? if > 1.21.10 {*/Identifier/*? } else {*//*ResourceLocation*//*? }*/.fromNamespaceAndPath(MODID, "main")
-    //? if > 1.21.8 {
+    private val categoryResource = Identifier.fromNamespaceAndPath(MODID, "main")
     val CATEGORY: KeyMapping.Category = KeyMapping.Category.register(categoryResource)
-    //? }
 
-    val COPY: KeyMapping = KeyBindingHelper.registerKeyBinding(
+    val COPY: KeyMapping = KeyMappingHelper.registerKeyMapping(
         KeyMapping(
             "key.toolshot.copy",
             GLFW.GLFW_KEY_UNKNOWN,
-            /*? if > 1.21.8 {*/CATEGORY,/*?} else {*//*"key.category.toolshot.main"*//*?}*/
+            CATEGORY,
         )
     )
 
     override fun onInitializeClient() {
         config = Config.register(configurator)
         ScreenEvents.BEFORE_INIT.register { _, screen, _, _ ->
-            ScreenKeyboardEvents.allowKeyPress(screen).register { /*? if > 1.21.8 {*/ _, event /*?} else {*//*screen, key, scancode, modifiers*//*?}*/ ->
-                if (COPY.matches(/*? if > 1.21.8 {*/event/*?} else {*//*key, scancode*//*?}*/)) {
-                    val state = TooltipUtil.lastState ?: return@register true
-                    TooltipUtil.copyTooltipToClipboard(state)
-                    return@register false
+            ScreenKeyboardEvents.allowKeyPress(screen)
+                .register { _, event  ->
+                    if (COPY.matches(event)) {
+                        val state = TooltipUtil.lastState ?: return@register true
+                        TooltipUtil.copyTooltipToClipboard(state)
+                        return@register false
+                    }
+                    return@register true
                 }
-                return@register true
-            }
         }
     }
 }

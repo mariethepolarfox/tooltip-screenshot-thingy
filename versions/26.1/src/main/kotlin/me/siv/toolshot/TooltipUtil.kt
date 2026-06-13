@@ -17,15 +17,16 @@ import me.siv.toolshot.clipboard.ClipboardUtil
 import me.siv.toolshot.clipboard.MacOsCompat
 import me.siv.toolshot.config.Config
 import net.minecraft.client.Camera
-import net.minecraft.client.gui.GuiGraphics
+import net.minecraft.client.gui.GuiGraphicsExtractor
 import net.minecraft.client.gui.render.GuiRenderer
-import net.minecraft.client.gui.render.state.GuiRenderState
 import net.minecraft.client.gui.screens.inventory.tooltip.TooltipRenderUtil
 import net.minecraft.client.renderer.*
 import net.minecraft.client.renderer.fog.FogRenderer
 import net.minecraft.client.renderer.rendertype.RenderSetup
 import net.minecraft.client.renderer.rendertype.RenderType
+import net.minecraft.client.renderer.state.gui.GuiRenderState
 import net.minecraft.network.chat.Component
+import net.minecraft.world.phys.Vec3
 import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
 import java.io.File
@@ -82,13 +83,13 @@ object TooltipUtil {
             minecraft.level?.gameTime ?: 0L,
             minecraft.deltaTracker,
             minecraft.options.menuBackgroundBlurriness,
-            Camera(),
+            Vec3.ZERO,
             true,
         )
         val consumer = OverrideVertexProvider(ByteBufferBuilder(256), renderTarget)
 
         val renderState = GuiRenderState()
-        val context = GuiGraphics(minecraft,renderState, 0, 0)
+        val context = GuiGraphicsExtractor(minecraft,renderState, 0, 0)
 
         val renderer = GuiRenderer(
             renderState,
@@ -106,21 +107,21 @@ object TooltipUtil {
             minecraft.window.guiScaledHeight / (height + 24).toFloat(),
         )
 
-        TooltipRenderUtil.renderTooltipBackground(context, 0 + 12, 0 + 12, fullWidth, height, rl)
+        TooltipRenderUtil.extractTooltipBackground(context, 0 + 12, 0 + 12, fullWidth, height, rl)
         var yOffset = 0
 
         list.forEach { component ->
-            component.renderText(context, font, 0 + 12, yOffset + 12)
+            component.extractText(context, font, 0 + 12, yOffset + 12)
             yOffset += component.getHeight(font) + (if (component == list.first()) 2 else 0)
         }
 
         yOffset = 0
 
         list.forEach { component ->
-            component.renderImage(font, 0 + 12, yOffset + 12, fullWidth, height, context)
+            component.extractImage(font, 0 + 12, yOffset + 12, fullWidth, height, context)
             yOffset += component.getHeight(font) + (if (component == list.first()) 2 else 0)
         }
-        context.renderDeferredElements()
+        context.extractDeferredElements(0, 0, 0f)
         (renderer as GuiRendererInterface).`toolShot$render`(minecraft.gameRenderer.fogRenderer.getBuffer(FogRenderer.FogMode.NONE), renderTarget)
 
         consumer.finishDrawing()
@@ -183,7 +184,7 @@ object TooltipUtil {
                     } else {
                         Component.translatable("toolshot.copy_failure")
                     }
-                    Toolshot.mc.gui.chat.addMessage(Component.literal("§7[Toolshot] ").append(message))
+                    Toolshot.mc.gui.chat.addClientSystemMessage(Component.literal("§7[Toolshot] ").append(message))
                 } catch (e: Exception) {
                     e.printStackTrace()
                 }
