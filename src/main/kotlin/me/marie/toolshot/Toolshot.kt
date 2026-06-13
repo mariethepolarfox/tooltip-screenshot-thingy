@@ -36,15 +36,14 @@ object Toolshot : ClientModInitializer, Logger by LoggerFactory.getLogger(MODID)
     override fun onInitializeClient() {
         config = Config.register(configurator)
         ScreenEvents.BEFORE_INIT.register { _, screen, _, _ ->
-            ScreenKeyboardEvents.allowKeyPress(screen)
-                .register { _, event  ->
-                    if (COPY.matches(event)) {
-                        val state = TooltipUtil.lastState ?: return@register true
-                        TooltipUtil.copyTooltipToClipboard(state)
-                        return@register false
-                    }
-                    return@register true
+            ScreenKeyboardEvents.allowKeyPress(screen).register { _, event ->
+                if (COPY.matches(event)) {
+                    val state = TooltipUtil.lastState ?: return@register true
+                    TooltipUtil.copyTooltipToClipboard(state)
+                    return@register false
                 }
+                return@register true
+            }
         }
     }
 }
