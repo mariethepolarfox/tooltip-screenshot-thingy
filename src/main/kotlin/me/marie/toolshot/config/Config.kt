@@ -1,4 +1,4 @@
-package me.siv.toolshot.config
+package me.marie.toolshot.config
 
 import com.teamresourceful.resourcefulconfigkt.api.ConfigKt
 

@@ -1,4 +1,4 @@
-package me.siv.toolshot.mixins;
+package me.marie.toolshot.mixins;
 
 import net.minecraft.client.main.Main;
 import org.spongepowered.asm.mixin.Mixin;

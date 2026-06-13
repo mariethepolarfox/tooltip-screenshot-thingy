@@ -1,9 +1,9 @@
-package me.siv.toolshot.config
+package me.marie.toolshot.config
 
 import com.teamresourceful.resourcefulconfig.api.client.ResourcefulConfigScreen
 import com.terraformersmc.modmenu.api.ConfigScreenFactory
 import com.terraformersmc.modmenu.api.ModMenuApi
-import me.siv.toolshot.Toolshot
+import me.marie.toolshot.Toolshot
 import net.minecraft.client.gui.screens.Screen
 
 class ModMenuCompat : ModMenuApi {

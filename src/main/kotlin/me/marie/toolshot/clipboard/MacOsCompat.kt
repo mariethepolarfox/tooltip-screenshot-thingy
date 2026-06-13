@@ -1,4 +1,4 @@
-package me.siv.toolshot.clipboard
+package me.marie.toolshot.clipboard
 
 import ca.weblite.objc.Client
 import ca.weblite.objc.Proxy

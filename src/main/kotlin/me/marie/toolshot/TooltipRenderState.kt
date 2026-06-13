@@ -1,4 +1,4 @@
-package me.siv.toolshot
+package me.marie.toolshot
 
 import net.minecraft.client.gui.Font
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent

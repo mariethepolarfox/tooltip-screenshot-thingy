@@ -1,4 +1,4 @@
-package me.siv.toolshot.clipboard
+package me.marie.toolshot.clipboard
 
 import java.awt.Image
 import java.awt.datatransfer.DataFlavor

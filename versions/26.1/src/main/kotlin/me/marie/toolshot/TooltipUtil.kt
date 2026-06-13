@@ -1,4 +1,4 @@
-package me.siv.toolshot
+package me.marie.toolshot
 
 import com.ibm.icu.text.SimpleDateFormat
 import com.mojang.blaze3d.buffers.GpuBuffer
@@ -13,10 +13,9 @@ import com.mojang.blaze3d.vertex.BufferBuilder
 import com.mojang.blaze3d.vertex.ByteBufferBuilder
 import com.mojang.blaze3d.vertex.VertexConsumer
 import it.unimi.dsi.fastutil.objects.Object2ObjectSortedMaps
-import me.siv.toolshot.clipboard.ClipboardUtil
-import me.siv.toolshot.clipboard.MacOsCompat
-import me.siv.toolshot.config.Config
-import net.minecraft.client.Camera
+import me.marie.toolshot.clipboard.ClipboardUtil
+import me.marie.toolshot.clipboard.MacOsCompat
+import me.marie.toolshot.config.Config
 import net.minecraft.client.gui.GuiGraphicsExtractor
 import net.minecraft.client.gui.render.GuiRenderer
 import net.minecraft.client.gui.screens.inventory.tooltip.TooltipRenderUtil

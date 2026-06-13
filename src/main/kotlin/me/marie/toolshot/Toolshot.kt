@@ -1,8 +1,8 @@
-package me.siv.toolshot
+package me.marie.toolshot
 
 import com.teamresourceful.resourcefulconfig.api.loader.Configurator
 import com.teamresourceful.resourcefulconfig.api.types.ResourcefulConfig
-import me.siv.toolshot.config.Config
+import me.marie.toolshot.config.Config
 import net.fabricmc.api.ClientModInitializer
 import net.fabricmc.fabric.api.client.keymapping.v1.KeyMappingHelper
 import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents
