@@ -1,3 +1,5 @@
+import net.fabricmc.loom.task.ValidateAccessWidenerTask
+
 plugins {
     java
     idea
@@ -75,8 +77,9 @@ tasks {
             targetFile.writeBytes(sourceFile.readBytes())
         }
     }
-
 }
+
+tasks.withType<ValidateAccessWidenerTask> { enabled = false }
 
 idea {
     module {
