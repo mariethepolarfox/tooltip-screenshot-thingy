@@ -14,7 +14,7 @@ import java.util.Locale;
 @Mixin(Main.class)
 public class MainMixin {
     @Inject(method = "main", at = @At("HEAD"), remap = false)
-    private static void awtHack(String[] strings, CallbackInfo ci) {
+    private static void awtHack(String[] args, CallbackInfo ci) {
         if (!System.getProperty("os.name").toLowerCase(Locale.ROOT).contains("mac")) {
             System.setProperty("java.awt.headless", "false");
         }

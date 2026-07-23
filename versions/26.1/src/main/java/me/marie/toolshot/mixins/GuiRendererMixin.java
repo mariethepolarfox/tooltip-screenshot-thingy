@@ -1,24 +1,24 @@
 package me.marie.toolshot.mixins;
 
 
-import me.marie.toolshot.GuiRendererInterface;
-import net.minecraft.client.renderer.Projection;
-import net.minecraft.client.renderer.state.WindowRenderState;
-import net.minecraft.client.renderer.state.gui.GuiRenderState;
-import net.minecraft.client.renderer.state.gui.pip.PictureInPictureRenderState;
-import net.minecraft.client.renderer.ProjectionMatrixBuffer;
 import com.mojang.blaze3d.ProjectionType;
 import com.mojang.blaze3d.buffers.GpuBuffer;
 import com.mojang.blaze3d.buffers.GpuBufferSlice;
 import com.mojang.blaze3d.pipeline.RenderTarget;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.VertexFormat;
+import me.marie.toolshot.GuiRendererInterface;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.render.GuiRenderer;
 import net.minecraft.client.renderer.MappableRingBuffer;
+import net.minecraft.client.renderer.Projection;
+import net.minecraft.client.renderer.ProjectionMatrixBuffer;
+import net.minecraft.client.renderer.state.WindowRenderState;
+import net.minecraft.client.renderer.state.gui.GuiRenderState;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
+import org.jspecify.annotations.NonNull;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -40,7 +40,7 @@ public class GuiRendererMixin implements GuiRendererInterface {
     private List<GuiRenderer.MeshToDraw> meshesToDraw;
     @Final
     @Shadow
-    GuiRenderState renderState;
+    private GuiRenderState renderState;
     @Final
     @Shadow
     private Map<VertexFormat, MappableRingBuffer> vertexBuffers;
@@ -61,7 +61,7 @@ public class GuiRendererMixin implements GuiRendererInterface {
     }
 
     @Shadow
-    private void executeDrawRange(Supplier<String> supplier, RenderTarget arg, GpuBufferSlice gpuBufferSlice, GpuBufferSlice gpuBufferSlice2, GpuBuffer gpuBuffer, VertexFormat.IndexType arg2, int j, int k) {
+    private void executeDrawRange(Supplier<String> label, RenderTarget mainRenderTarget, GpuBufferSlice fogBuffer, GpuBufferSlice dynamicTransforms, GpuBuffer indexBuffer, VertexFormat.IndexType indexType, int startIndex, int endIndex) {
     }
 
     @Unique
@@ -99,7 +99,7 @@ public class GuiRendererMixin implements GuiRendererInterface {
     }
 
     @Override
-    public void toolShot$render(GpuBufferSlice gpuBufferSlice, RenderTarget renderTarget) {
+    public void toolShot$render(@NonNull GpuBufferSlice gpuBufferSlice, @NonNull RenderTarget renderTarget) {
         this.prepare();
         this.toolShot$draw(gpuBufferSlice, renderTarget);
 

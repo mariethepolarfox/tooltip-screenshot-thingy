@@ -24,18 +24,18 @@ public class GuiGraphicsExtractorMixin {
     )
     private void onRenderTooltip(
             Font font,
-            List<ClientTooltipComponent> list,
-            int i,
-            int j,
-            ClientTooltipPositioner clientTooltipPositioner,
-            Identifier id,
-            boolean bl,
+            List<ClientTooltipComponent> lines,
+            int xo,
+            int yo,
+            ClientTooltipPositioner positioner,
+            Identifier style,
+            boolean replaceExisting,
             CallbackInfo ci
     ) {
         var lastState = TooltipUtil.INSTANCE.getLastState();
 
-        if (lastState == null || !lastState.equals(list, id, font)) {
-            TooltipUtil.INSTANCE.setLastState(new TooltipRenderState(list, id, font));
+        if (lastState == null || !lastState.equals(lines, style, font)) {
+            TooltipUtil.INSTANCE.setLastState(new TooltipRenderState(lines, style, font));
         }
     }
 }
