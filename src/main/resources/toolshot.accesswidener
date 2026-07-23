@@ -4,3 +4,5 @@ accessible class net/minecraft/client/gui/render/GuiRenderer$MeshToDraw
 accessible field net/minecraft/client/gui/render/GuiRenderer$Draw indexCount I
 accessible field net/minecraft/client/renderer/GameRenderer fogRenderer Lnet/minecraft/client/renderer/fog/FogRenderer;
 accessible method com/mojang/blaze3d/platform/NativeImage writeToChannel (Ljava/nio/channels/WritableByteChannel;)Z
+accessible field net/minecraft/client/renderer/GameRenderer guiRenderer Lnet/minecraft/client/gui/render/GuiRenderer;
+accessible field net/minecraft/client/gui/render/GuiRenderer pictureInPictureRenderers Ljava/util/Map;

@@ -1,6 +1,7 @@
 package me.marie.toolshot
 
 import com.ibm.icu.text.SimpleDateFormat
+import com.mojang.blaze3d.GpuFormat
 import com.mojang.blaze3d.buffers.GpuBuffer
 import com.mojang.blaze3d.pipeline.RenderTarget
 import com.mojang.blaze3d.pipeline.TextureTarget
@@ -26,6 +27,7 @@ import net.minecraft.client.renderer.rendertype.RenderType
 import net.minecraft.client.renderer.state.gui.GuiRenderState
 import net.minecraft.network.chat.Component
 import net.minecraft.world.phys.Vec3
+import org.joml.Vector4f
 import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
 import java.io.File
@@ -63,7 +65,7 @@ object TooltipUtil {
         val encoder: CommandEncoder = device.createCommandEncoder()
         var renderTarget: RenderTarget
         try {
-            renderTarget = TextureTarget(null, (fullWidth + 24) * Config.scale, (height + 24) * Config.scale, false)
+            renderTarget = TextureTarget(null, (fullWidth + 24) * Config.scale, (height + 24) * Config.scale, false, GpuFormat.RGBA8_UNORM)
         } catch (e: Exception) {
             Toolshot.error("Failed to create render target")
             e.printStackTrace()
@@ -85,22 +87,19 @@ object TooltipUtil {
             Vec3.ZERO,
             true,
         )
-        val consumer = OverrideVertexProvider(ByteBufferBuilder(256), renderTarget)
 
         val renderState = GuiRenderState()
         val context = GuiGraphicsExtractor(minecraft,renderState, 0, 0)
 
         val renderer = GuiRenderer(
             renderState,
-            consumer,
-            SubmitNodeStorage(),
-            minecraft.gameRenderer.featureRenderDispatcher,
-            emptyList()
+            minecraft.gameRenderer.featureRenderDispatcher(),
+            minecraft.gameRenderer.guiRenderer.pictureInPictureRenderers.values.toList(),
         )
 
         val texture = renderTarget.colorTexture ?: return
 
-        encoder.clearColorTexture(texture, 0)
+        encoder.clearColorTexture(texture, Vector4f(0f, 0f, 0f, 0f))
         context.pose().scale(
             minecraft.window.guiScaledWidth / (fullWidth + 24).toFloat(),
             minecraft.window.guiScaledHeight / (height + 24).toFloat(),
@@ -123,7 +122,6 @@ object TooltipUtil {
         context.extractDeferredElements(0, 0, 0f)
         (renderer as GuiRendererInterface).`toolShot$render`(minecraft.gameRenderer.fogRenderer.getBuffer(FogRenderer.FogMode.NONE), renderTarget)
 
-        consumer.finishDrawing()
         saveImageToClipboard(renderTarget, MacosUtil.IS_MACOS, Config.saveFile)
 
         globalUniform.close()
@@ -138,17 +136,17 @@ object TooltipUtil {
         val gpuBuffer = RenderSystem.getDevice().createBuffer(
             null,
             GpuBuffer.USAGE_COPY_DST or GpuBuffer.USAGE_MAP_READ,
-            (renderTarget.width * renderTarget.height * (renderTarget.colorTexture?.format?.pixelSize() ?: 4)).toLong()
+            (renderTarget.width * renderTarget.height * (renderTarget.colorTexture?.format?.blockSize() ?: 4)).toLong()
         )
         val encoder = RenderSystem.getDevice().createCommandEncoder()
         RenderSystem.getDevice().createCommandEncoder().copyTextureToBuffer(gpuTexture, gpuBuffer, 0, {
             try {
-                val readView = encoder.mapBuffer(gpuBuffer, true, false)
+                val readView = gpuBuffer.map(true, false)
                 val image = NativeImage(width, height, false)
 
                 for (k in 0..<height) {
                     for (l in 0..<width) {
-                        val m = readView.data().getInt((l + k * width) * gpuTexture!!.format.pixelSize())
+                        val m = readView.data().getInt((l + k * width) * gpuTexture.format.blockSize())
                         image.setPixelABGR(l, height - k - 1, m)
                     }
                 }
@@ -183,7 +181,7 @@ object TooltipUtil {
                     } else {
                         Component.translatable("toolshot.copy_failure")
                     }
-                    Toolshot.mc.gui.chat.addClientSystemMessage(Component.literal("§7[Toolshot] ").append(message))
+                    Toolshot.mc.gui.hud.chat.addClientSystemMessage(Component.literal("§7[Toolshot] ").append(message))
                 } catch (e: Exception) {
                     e.printStackTrace()
                 }
@@ -192,22 +190,5 @@ object TooltipUtil {
                 renderTarget.destroyBuffers()
             }
         }, 0)
-    }
-}
-
-class OverrideVertexProvider(bufferAllocator: ByteBufferBuilder, rt: RenderTarget) : MultiBufferSource.BufferSource(
-    bufferAllocator,
-    Object2ObjectSortedMaps.emptyMap()
-) {
-    private val currentLayer: RenderType = TooltipUtil.TOOLTIP_LAYER.apply(rt)
-    var bufferBuilder: BufferBuilder = BufferBuilder(this.sharedBuffer, currentLayer.mode(), currentLayer.format())
-
-    override fun getBuffer(renderType: RenderType): VertexConsumer {
-        return this.bufferBuilder
-    }
-
-    fun finishDrawing() {
-        this.startedBuilders[this.currentLayer] = this.bufferBuilder
-        this.endBatch(this.currentLayer)
     }
 }
