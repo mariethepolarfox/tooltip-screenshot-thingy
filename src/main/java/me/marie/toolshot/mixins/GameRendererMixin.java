@@ -13,7 +13,7 @@ public class GameRendererMixin {
 
     @Inject(method = "render", at = @At("HEAD"))
     void prepare(CallbackInfo ci) {
-        TooltipUtil.INSTANCE.setLastState(null);
+        //TooltipUtil.INSTANCE.setLastState(null);
     }
 
 }
