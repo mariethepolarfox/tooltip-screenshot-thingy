@@ -1,9 +1,9 @@
 [versions]
 
 # Minecraft
-fabricLoader = "0.18.4"
-fabricKt = "1.13.7+kotlin.2.2.21"
-loom = "1.15-SNAPSHOT"
+fabricLoader = "0.19.3"
+fabricKt = "1.13.12+kotlin.2.4.0"
+loom = "1.17-SNAPSHOT"
 
 # Dependencies
 objc = "1.2"

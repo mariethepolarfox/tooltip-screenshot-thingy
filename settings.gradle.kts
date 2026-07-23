@@ -11,10 +11,10 @@ pluginManagement {
 }
 
 plugins {
-    id("dev.kikugie.stonecutter") version "0.8-beta.2"
+    id("dev.kikugie.stonecutter") version "0.9.7"
 }
 
-val versions = listOf("26.1")
+val versions = listOf("26.2", "26.1")
 
 stonecutter {
     create(rootProject) {
