@@ -1,9 +1,7 @@
-import org.jetbrains.kotlin.gradle.dsl.JvmTarget
-
 plugins {
     java
     idea
-    kotlin("jvm") version "2.2.21"
+    kotlin("jvm") version "2.4.0"
     alias(libs.plugins.loom)
     `versioned-catalogues`
 }
@@ -14,21 +12,27 @@ repositories {
     maven("https://maven.terraformersmc.com/releases/")
 }
 
+java {
+    withSourcesJar()
+}
+
+kotlin { jvmToolchain(25) }
+
+
 dependencies {
     minecraft(versionedCatalog["minecraft"])
-    mappings(loom.officialMojangMappings())
 
-    modImplementation(libs.fabricLoader)
-    modImplementation(versionedCatalog["fabricApi"])
-    modImplementation(libs.fabricKt)
+    implementation(libs.fabricLoader)
+    implementation(versionedCatalog["fabricApi"])
+    implementation(libs.fabricKt)
 
-    modImplementation(libs.devauth)
+    implementation(libs.devauth)
 
-    modImplementation(versionedCatalog["resourcefulconfig"])
-    modImplementation(libs.resourcefulconfigkt)
+    implementation(versionedCatalog["resourcefulconfig"])
+    implementation(libs.resourcefulconfigkt)
     include(libs.resourcefulconfigkt)
 
-    modImplementation(versionedCatalog["modmenu"])
+    implementation(versionedCatalog["modmenu"])
 
     compileOnly(libs.objc)
 }
@@ -63,12 +67,6 @@ tasks {
         from("LICENSE")
     }
 
-    compileKotlin {
-        compilerOptions {
-            jvmTarget = JvmTarget.JVM_21
-        }
-    }
-
     build {
         doLast {
             val sourceFile = rootProject.projectDir.resolve("versions/${project.name}/build/libs/${stonecutter.current.version}-$version.jar")
@@ -78,10 +76,6 @@ tasks {
         }
     }
 
-}
-
-java {
-    withSourcesJar()
 }
 
 idea {

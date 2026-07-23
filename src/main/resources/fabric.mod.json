@@ -5,7 +5,8 @@
     "name": "Toolshot",
     "description": "Screenshot Tooltips just like they look in game!",
     "authors": [
-        "Siv"
+        "Marie",
+        "Juna"
     ],
     "contact": { },
     "license": "MIT",
@@ -15,11 +16,11 @@
         "client": [
             {
                 "adapter": "kotlin",
-                "value": "me.siv.toolshot.Toolshot"
+                "value": "me.marie.toolshot.Toolshot"
             }
         ],
         "modmenu": [
-            "me.siv.toolshot.config.ModMenuCompat"
+            "me.marie.toolshot.config.ModMenuCompat"
         ]
     },
     "mixins": [
@@ -27,7 +28,7 @@
     ],
     "depends": {
         "fabricloader": ">=${loader_version}",
-        "fabric": "*",
+        "fabric-api": "*",
         "minecraft": "${minecraft_version}"
     },
     "accessWidener": "toolshot.accesswidener"

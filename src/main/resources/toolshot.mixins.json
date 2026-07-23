@@ -1,12 +1,12 @@
 {
   "required": true,
   "minVersion": "0.8",
-  "package": "me.siv.toolshot.mixins",
+  "package": "me.marie.toolshot.mixins",
   "compatibilityLevel": "JAVA_21",
   "mixins": [
   ],
   "client": [
-    "GuiGraphicsMixin",
+    "GuiGraphicsExtractorMixin",
     "GuiRendererMixin",
     "MainMixin",
     "GameRendererMixin"

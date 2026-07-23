@@ -7,10 +7,10 @@ loom = "1.15-SNAPSHOT"
 
 # Dependencies
 objc = "1.2"
-resourcefulConfigKt = "3.5.15"
+resourcefulConfigKt = "4.0.0-beta.1"
 
 # Dev Dependencies
-devauth = "1.2.1"
+devauth = "1.2.2"
 
 [libraries]
 
@@ -20,7 +20,7 @@ fabricKt = { module = "net.fabricmc:fabric-language-kotlin", version.ref = "fabr
 devauth = { module = "me.djtheredstoner:DevAuth-fabric", version.ref = "devauth" }
 
 objc = { module = "ca.weblite:java-objc-bridge", version.ref = "objc" }
-resourcefulconfigkt = { module = "com.teamresourceful.resourcefulconfigkt:resourcefulconfigkt-fabric-1.21.5", version.ref = "resourcefulConfigKt" }
+resourcefulconfigkt = { module = "com.teamresourceful.resourcefulconfigkt:resourcefulconfigkt-26.1-rc-1", version.ref = "resourcefulConfigKt" }
 
 [plugins]
-loom = { id = "fabric-loom", version.ref = "loom" }
+loom = { id = "net.fabricmc.fabric-loom", version.ref = "loom" }
