@@ -31,6 +31,7 @@ dependencies {
     implementation(libs.devauth)
 
     implementation(versionedCatalog["resourcefulconfig"])
+    include(versionedCatalog["resourcefulconfig"])
     implementation(libs.resourcefulconfigkt)
     include(libs.resourcefulconfigkt)
 
